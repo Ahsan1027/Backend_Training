@@ -44,7 +44,7 @@ Agenda.define('create-order-stats', { concurrency: 1 }, async (job, done) => {
       }
     }
     ]);
-    console.log('\n\n', { orderStats });
+    // console.log('\n\n', { orderStats });
 
     job.attrs.lockedAt = null;
     job.attrs.state = JOB_STATES.COMPLETED;
@@ -56,7 +56,7 @@ Agenda.define('create-order-stats', { concurrency: 1 }, async (job, done) => {
       totalQuantity: orderStats[0].totalQuantity,
       totalAmount: orderStats[0].totalAmount
     });
-    console.log('data is,,, ', stat);
+    // console.log('data is,,, ', stat);
 
     const previousStats = await OrderStats.findOne({});
     if (previousStats) {

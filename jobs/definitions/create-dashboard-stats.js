@@ -85,7 +85,7 @@ Agenda.define('create-dashboard-stats', { concurrency: 1 }, async (job, done) =>
       }
     }
     ]);
-    console.log('\n\n', { todayStats });
+    // console.log('\n\n', { todayStats });
 
     job.attrs.progress = 50;
     await job.save();
@@ -110,7 +110,7 @@ Agenda.define('create-dashboard-stats', { concurrency: 1 }, async (job, done) =>
     },
 
     ]);
-    console.log('\n\n', { sevenDayStats });
+    // console.log('\n\n', { sevenDayStats });
 
     job.attrs.progress = 75;
     await job.save();
@@ -133,7 +133,7 @@ Agenda.define('create-dashboard-stats', { concurrency: 1 }, async (job, done) =>
       }
     },
     ]);
-    console.log('\n\n', { thirtyDayStats });
+    // console.log('\n\n', { thirtyDayStats });
 
     job.attrs.lockedAt = null;
     job.attrs.state = JOB_STATES.COMPLETED;
@@ -150,7 +150,7 @@ Agenda.define('create-dashboard-stats', { concurrency: 1 }, async (job, done) =>
       totalSold,
       totalUnsold
     });
-    console.log('data is,,, ', stat);
+    // console.log('data is,,, ', stat);
     const previousStats = await DashboardStats.findOne({});
     if (previousStats) {
       const { _id } = previousStats;

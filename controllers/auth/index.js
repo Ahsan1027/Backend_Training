@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 
-import sendEmail from '../../middlewares/nodemailer';
+import SendEmail from '../../utils/forgot-password-email';
+import SignupEmail from '../../utils/signup-email';
 import User from '../../models/user';
 
 export const RegisterUser = async (req, res) => {
@@ -21,6 +22,8 @@ export const RegisterUser = async (req, res) => {
       return res.status(400).json({ message: 'Email already in use' });
     }
 
+    SignupEmail(email, name);
+
     const newUser = new User({
       name,
       mobile,
@@ -29,6 +32,7 @@ export const RegisterUser = async (req, res) => {
       role: 'user'
     });
     await newUser.save();
+
     res.status(201).json({ message: 'User Registered Successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Error Registering User', error });
@@ -53,8 +57,9 @@ export const LoginUser = async (req, res) => {
       return res.status(401).json({ message: 'Invalid password' });
     }
     const loggedInToken = await user.generateAuthToken();
-    const { _id: userId, name: username, role } = user;
-    res.json({ token: loggedInToken, id: userId, username, email, role, message: 'Login Successful' });
+    const { _id: userId, name: username, role, stripeId } = user;
+
+    res.json({ token: loggedInToken, id: userId, username, email, role, stripeId, message: 'Login Successful' });
   } catch (error) {
     res.status(500).json({ message: 'Error logging in', error });
   }
@@ -72,8 +77,10 @@ export const ForgotPassword = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
+
     const unique = await user.generateAuthToken();
-    sendEmail(email, unique);
+    SendEmail(email, unique);
+
     res.json({ message: 'Email sent to reset password' });
   } catch (error) {
     res.status(500).json({ message: 'Error checking email', error });

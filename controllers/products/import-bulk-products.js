@@ -14,6 +14,8 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage }).any();
 
+const chunkSize = 2;
+
 export const ImportBulkProducts = async (req, res) => {
   try {
     upload(req, res, async (err) => {
@@ -26,7 +28,7 @@ export const ImportBulkProducts = async (req, res) => {
       }
 
       const csvFilePath = req.files[0].path;
-      const results = [];
+      const productsData = [];
       const errorRows = [];
       let rowIndex = 1;
 
@@ -52,34 +54,42 @@ export const ImportBulkProducts = async (req, res) => {
           if (missingFields.length > 0) {
             errorRows.push({ rowIndex, missingFields });
           } else {
-            results.push(data);
+            const product = {
+              title: data.Title,
+              price: data.Price,
+              stock: data.Stock,
+              rating: data.Rating,
+              thumbnail: data.Thumbnail,
+              sold: 0,
+              sizes: data.Sizes.split('-'),
+              colors: data.Colors.split('-'),
+            };
+            productsData.push(product);
           }
           rowIndex++;
         })
         .on('end', async () => {
-          const productsData = [];
-
-          for (const productData of results) {
-            const newProduct = new Product({
-              title: productData.Title,
-              price: productData.Price,
-              stock: productData.Stock,
-              rating: productData.Rating,
-              thumbnail: productData.Thumbnail,
-              sold: 0,
-              sizes: productData.Sizes.split('-'),
-              colors: productData.Colors.split('-'),
-            });
-
-            await newProduct.save();
-            productsData.push(newProduct);
-          }
-          const total = rowIndex - 1
+          const total = rowIndex - 1;
           const filename = req.files[0].originalname;
-          res.status(201).json({ message: 'Products added successfully', productsData, errorRows, filename, total, rowIndex });
+
+          for (let i = 0; i < productsData.length; i += chunkSize) {
+            const chunk = productsData.slice(i, i + chunkSize);
+            console.log('\n\n check chunk', chunk, i, productsData.length);
+
+            await Product.insertMany(chunk);
+          }
+
+          res.status(201).json({
+            message: 'Products added successfully',
+            productsData,
+            errorRows,
+            filename,
+            total,
+            rowIndex,
+          });
         });
     });
   } catch (error) {
-    res.status(500).json({ message: 'Error adding product' });
+    res.status(500).json({ message: 'Error adding products' });
   }
 };

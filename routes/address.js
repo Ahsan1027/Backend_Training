@@ -1,7 +1,7 @@
 import express from 'express';
 
-import { AddAddress } from '../controllers/user/add-address'
-import { GetAddress } from '../controllers/user/get-address'
+import { AddAddress } from '../controllers/address/add-address'
+import { GetAddress } from '../controllers/address/get-address'
 
 import passport from '../middlewares/passport';
 

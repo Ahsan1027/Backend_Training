@@ -4,6 +4,7 @@ import Orders from '../../models/orders';
 import Product from '../../models/products';
 import Notification from '../../models/notifications';
 import User from '../../models/user';
+import { CreateCharges } from "../payment/create-charges";
 
 export const AddOrders = async (req, res) => {
   try {
@@ -14,10 +15,11 @@ export const AddOrders = async (req, res) => {
       products,
       email,
       totalAmount,
-      status,
+      cardId,
+      customerId,
     } = req.body;
 
-    if (!orderId || !username || !products || !email || !totalAmount || !status) {
+    if (!orderId || !username || !products || !email || !totalAmount) {
       return res.status(400).json({ message: 'Missing required fields' });
     }
 
@@ -52,12 +54,11 @@ export const AddOrders = async (req, res) => {
       products,
       email,
       totalAmount,
-      status,
     });
 
     await newOrder.save();
 
-    const notificationPromises = adminEmails.map( (adminEmail) => {
+    const notificationPromises = adminEmails.map((adminEmail) => {
       const notification = new Notification({
         email: adminEmail,
         orderId,
@@ -67,9 +68,17 @@ export const AddOrders = async (req, res) => {
     });
 
     await Promise.all(notificationPromises);
-    
+
+    let createCharge = null;
+    const result = await CreateCharges(email, cardId, customerId, totalAmount, orderId);
+
+    if (result && result.createCharge) {
+      createCharge = result.createCharge;
+    }
+
     res.status(201).json({
       orderId,
+      createCharge,
       message: 'New order created',
     });
   } catch (error) {

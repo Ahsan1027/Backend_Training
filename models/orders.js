@@ -30,7 +30,7 @@ const OrderSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    default: "paid"
+    default: "Unpaid"
   },
   deliveredStatus: {
     type: Boolean,

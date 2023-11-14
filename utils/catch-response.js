@@ -15,7 +15,6 @@ const catchResponse = ({
 
   if (err.message) {
     error = err.message;
-    // jnvjn
   }
 
   return res.status(statusCode).json({
