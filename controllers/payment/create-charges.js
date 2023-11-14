@@ -1,25 +1,28 @@
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+import stripe from 'stripe';
+
+const stripeInstance = stripe(process.env.STRIPE_SECRET_KEY);
 
 export const CreateCharges = async (
   email,
   cardId,
   customerId,
   totalAmount,
-  orderId) => {
+  orderId
+) => {
   try {
-    const createCharge = await stripe.charges.create({
+    const createCharge = await stripeInstance.charges.create({
       receipt_email: email,
       amount: totalAmount * 100,
-      currency: "usd",
+      currency: 'usd',
       card: cardId,
       customer: customerId,
       metadata: {
-        orderId
-      }
+        orderId,
+      },
     });
 
-    return {createCharge};
+    return { createCharge };
   } catch (error) {
     throw new Error(error);
   }
-}
+};

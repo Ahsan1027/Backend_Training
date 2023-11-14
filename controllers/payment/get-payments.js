@@ -1,4 +1,6 @@
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+import stripe from 'stripe';
+
+const stripeInstance = stripe(process.env.STRIPE_SECRET_KEY);
 
 export const GetCustomerCards = async (req, res) => {
   try {
@@ -8,7 +10,7 @@ export const GetCustomerCards = async (req, res) => {
       return res.status(500).json({ message: 'No Payment Record Exists' });
     }
 
-    const cards = await stripe.customers.listSources(
+    const cards = await stripeInstance.customers.listSources(
       customerId,
       { object: 'card', limit: 3 }
     );

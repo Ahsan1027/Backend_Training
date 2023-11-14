@@ -1,7 +1,9 @@
+import stripe from 'stripe';
+
 import User from '../../models/user';
 import { AddNewCard } from './add-new-card';
 
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const stripeInstance = stripe(process.env.STRIPE_SECRET_KEY);
 
 export const CreateNewCustomer = async (req, res) => {
   try {
@@ -27,7 +29,7 @@ export const CreateNewCustomer = async (req, res) => {
           customerId = result.customerId;
         }
       } else {
-        const customer = await stripe.customers.create({
+        const customer = await stripeInstance.customers.create({
           name,
           email,
         });

@@ -1,9 +1,11 @@
-const PbStripe = require('stripe')(process.env.PUBLISHABLE_KEY);
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+import stripe from 'stripe';
+
+const PbStripe = stripe(process.env.PUBLISHABLE_KEY);
+const stripeInstance = stripe(process.env.STRIPE_SECRET_KEY);
 
 export const AddNewCard = async (customerId, CVC, cardNum, expMonth, expYear) => {
   try {
-    const card_Token = await PbStripe.tokens.create({
+    const cardToken = await PbStripe.tokens.create({
       card: {
         cvc: CVC,
         number: cardNum,
@@ -12,12 +14,12 @@ export const AddNewCard = async (customerId, CVC, cardNum, expMonth, expYear) =>
       },
     });
 
-    const card = await stripe.customers.createSource(customerId, {
-      source: `${card_Token.id}`,
+    const card = await stripeInstance.customers.createSource(customerId, {
+      source: `${cardToken.id}`,
     });
 
     return { cardId: card.id, customerId };
   } catch (error) {
     throw new Error(error);
   }
-}
+};
