@@ -1,7 +1,9 @@
 import express from 'express';
 
-import { ReadNotification } from '../controllers/notification/read-notification'
-import { GetNotification } from '../controllers/notification/get-notification';
+import {
+  ReadNotification,
+  GetNotification
+} from '../controllers/notification/index'
 
 import passport from '../middlewares/passport';
 

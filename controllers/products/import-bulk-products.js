@@ -51,6 +51,8 @@ export const ImportBulkProducts = async (req, res) => {
 
           if (!data.Thumbnail) missingFields.push('Thumbnail');
 
+          if (!data.Images) missingFields.push('Images');
+
           if (missingFields.length > 0) {
             errorRows.push({ rowIndex, missingFields });
           } else {
@@ -63,6 +65,7 @@ export const ImportBulkProducts = async (req, res) => {
               sold: 0,
               sizes: data.Sizes.split('-'),
               colors: data.Colors.split('-'),
+              images: data.Images.split('/').map(image => image), 
             };
             productsData.push(product);
           }
@@ -74,8 +77,6 @@ export const ImportBulkProducts = async (req, res) => {
 
           for (let i = 0; i < productsData.length; i += chunkSize) {
             const chunk = productsData.slice(i, i + chunkSize);
-            console.log('\n\n check chunk', chunk, i, productsData.length);
-
             await Product.insertMany(chunk);
           }
 

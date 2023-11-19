@@ -1,10 +1,10 @@
 import express from 'express';
 
-import { CreateNewCustomer } from '../controllers/payment/create-customer';
-import { UpdateOrderStatus } from '../controllers/payment/update-order-status';
-import { GetCustomerCards } from '../controllers/payment/get-payments';
-
-// import passport from '../middlewares/passport';
+import {
+  CreateNewCustomer,
+  UpdateOrderStatus,
+  GetCustomerCards
+} from '../controllers/payment/index';
 
 const router = express.Router();
 

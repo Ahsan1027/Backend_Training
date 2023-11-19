@@ -3,7 +3,6 @@ import Order from '../../models/orders';
 export const UpdateOrderStatus = async (req) => {
   try {
     const event = req.body;
-    console.log('\n\n', 'Check Event Details', event, event.type);
 
     if (event.type == 'charge.succeeded') {
       const orderId = event.data.object.metadata.orderId;

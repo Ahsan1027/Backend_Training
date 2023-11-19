@@ -21,8 +21,9 @@ export const GetOrders = async (req, res) => {
     const [orders, total] = await Promise.all([
       Orders
         .find(filters)
-        .skip(parseInt(skip) || 0)
-        .limit(parseInt(limit) || 5),
+        .sort({ date: -1 }) 
+        .limit(parseInt(limit) || 5)
+        .skip(parseInt(skip) || 0),
       Orders.countDocuments(filters)
     ]);
 

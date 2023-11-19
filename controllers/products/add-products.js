@@ -50,7 +50,10 @@ export const AddProduct = async (req, res) => {
       });
       await newProduct.save();
 
-      res.status(201).json({ message: 'Product added successfully', productsData: newProduct });
+      res.status(201).json({ 
+        message: 'Product added successfully', 
+        productsData: newProduct 
+      });
     });
   } catch (error) {
     res.status(500).json({ message: 'Error adding product' });

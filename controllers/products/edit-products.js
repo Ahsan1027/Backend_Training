@@ -45,12 +45,18 @@ export const EditProduct = async (req, res) => {
 
       if (req.file) updateFields.thumbnail = req.file.filename;
 
-      const updatedProduct = await Product.findByIdAndUpdate(productId, updateFields, { new: true });
-      if (!updatedProduct) {
+      const result = await Product.updateOne({ _id: productId }, { $set: updateFields });
+
+      if (result.modifiedCount === 0) {
         return res.status(404).json({ message: 'Product not found' });
       }
 
-      return res.status(200).json({ message: 'Product updated successfully', updatedProduct });
+      const updatedProduct = await Product.findById(productId);
+
+      return res.status(200).json({ 
+        message: 'Product updated successfully', 
+        updatedProduct
+      });
     });
   } catch (error) {
     res.status(500).json({ message: 'Error updating product' });

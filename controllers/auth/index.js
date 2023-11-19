@@ -22,16 +22,19 @@ export const RegisterUser = async (req, res) => {
       return res.status(400).json({ message: 'Email already in use' });
     }
 
-    SignupEmail(email, name);
-
     const newUser = new User({
       name,
       mobile,
       email,
       password,
-      role: 'user'
+      role: 'user',
+      isVerififed: false
     });
+
     await newUser.save();
+    const unique = await newUser.generateAuthToken();
+    SignupEmail(email, unique);
+
 
     res.status(201).json({ message: 'User Registered Successfully' });
   } catch (error) {
@@ -51,6 +54,11 @@ export const LoginUser = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
+
+    if (!user.isVerified) {
+      return res.status(401).json({ message: 'Please verify your account first on your Email !' });
+    }
+
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
@@ -81,7 +89,7 @@ export const ForgotPassword = async (req, res) => {
     const unique = await user.generateAuthToken();
     SendEmail(email, unique);
 
-    res.json({ message: 'Email sent to reset password' });
+    res.json({ message: 'Email sent successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Error checking email', error });
   }
@@ -107,3 +115,26 @@ export const ResetPassword = async (req, res) => {
     res.status(500).json({ message: 'Error updating password', error });
   }
 };
+
+export const UpdateVerificationStatus = async (req, res) => {
+  try {
+    console.log(req.user);
+    const { _id, isVerified } = req.user;
+
+    if (isVerified) {
+      return res.status(200).json({ message: 'User already verified' });
+    }
+    
+    await User.updateOne({
+      _id
+    }, {
+      $set: {
+        isVerified: true
+      }
+    });
+
+    res.status(200).json({ message: 'User Verified' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error Verifying User' });
+  }
+}

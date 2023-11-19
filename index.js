@@ -1,6 +1,5 @@
 import 'dotenv/config';
 import express from 'express';
-import cors from 'cors';
 
 import Agenda from './jobs/config';
 import './config/database';
@@ -11,7 +10,6 @@ import './jobs/definitions';
 
 const app = express();
 
-app.use(cors());
 ApplyMiddlewares(app);
 
 app.use('/api', routers);

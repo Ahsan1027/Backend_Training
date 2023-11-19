@@ -18,7 +18,7 @@ export const OrdersDelivered = async (req, res) => {
     await order.save();
 
     const orderEmail = order.email;
-    const promises = order.products.map(async (data) => {
+    for (const data of order.products) {
       const objectId = mongoose.Types.ObjectId(data.product);
       const productDetails = await Product.findById(objectId);
 
@@ -27,8 +27,7 @@ export const OrdersDelivered = async (req, res) => {
         productDetails.sold += quantity;
         await productDetails.save();
       }
-    });
-    await Promise.all(promises);
+    }
 
     const notification = new Notification({
       email: orderEmail,

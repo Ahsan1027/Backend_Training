@@ -51,7 +51,10 @@ export const CreateNewCustomer = async (req, res) => {
       return res.status(400).send({ message: 'User not Found' });
     }
 
-    return res.status(200).send({ cardId, customerId });
+    return res.status(200).send({ 
+      cardId, 
+      customerId 
+    });
   } catch (error) {
     throw new Error(error);
   }

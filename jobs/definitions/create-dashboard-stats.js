@@ -1,5 +1,7 @@
 import moment from 'moment';
 
+// import mongoose from 'mongoose';
+
 import Agenda from '../config';
 
 import { JOB_STATES } from '../utils';
@@ -9,6 +11,7 @@ import Product from '../../models/products';
 import DashboardStats from '../../models/dashboard-stats';
 
 Agenda.define('create-dashboard-stats', { concurrency: 1 }, async (job, done) => {
+  // const objectIdToUpdate = '6532b5133cca529cf97b425a';
   console.log('*********************************************************');
   console.log('*********  Create Dashboard Stats Job Started   *********');
   console.log('*********************************************************');
@@ -140,23 +143,9 @@ Agenda.define('create-dashboard-stats', { concurrency: 1 }, async (job, done) =>
     job.attrs.progress = 100;
     await job.save();
 
-    const stat = new DashboardStats({
-      todayStats: todayStats[0],
-      sevenDayStats: sevenDayStats[0],
-      thirtyDayStats: thirtyDayStats[0],
-      totalOrders,
-      totalAmount,
-      topSellingProducts,
-      totalSold,
-      totalUnsold
-    });
-    // console.log('data is,,, ', stat);
-    const previousStats = await DashboardStats.findOne({});
-    if (previousStats) {
-      const { _id } = previousStats;
-      await DashboardStats.updateOne({
-        _id
-      }, {
+    await DashboardStats.updateOne(
+      { _id: '6532b5133cca529cf97b425a' },
+      {
         $set: {
           todayStats: todayStats[0],
           sevenDayStats: sevenDayStats[0],
@@ -167,10 +156,9 @@ Agenda.define('create-dashboard-stats', { concurrency: 1 }, async (job, done) =>
           totalSold,
           totalUnsold
         }
-      })
-    } else {
-      await stat.save();
-    }
+      },
+      { upsert: true }
+    );
 
     console.log('*********************************************************');
     console.log('********  Create Dashboard Stats Job Completed   ********');

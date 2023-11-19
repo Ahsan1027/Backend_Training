@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 
-const SignupEmail = (email, name) => {
+const SignupEmail = (email, unique) => {
   const transport = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
@@ -14,7 +14,7 @@ const SignupEmail = (email, name) => {
     to: email,
     subject: 'Signup Email confirmation',
     text: 'That was easy!',
-    html: `Welcome ${name} to your New Account!.`
+    html: `Click <a href="http://localhost:3000/user-verifying?token=${unique}">here</a> to verify your account.`
   };
 
   transport.sendMail(mailoptions, function (error) {

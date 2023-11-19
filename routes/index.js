@@ -4,7 +4,8 @@ import {
   ForgotPassword,
   LoginUser,
   RegisterUser,
-  ResetPassword
+  ResetPassword,
+  UpdateVerificationStatus
 } from '../controllers/auth';
 import dashboardAdminRouter from './dashboard';
 import nonauth from './non-authenticated-routes';
@@ -27,6 +28,7 @@ router.use('/notification', notification);
 router.post('/auth/signup', RegisterUser);
 router.post('/auth/login', LoginUser);
 router.post('/auth/forgot-password', ForgotPassword);
+router.put('/auth/user-verifying',passport.authenticate('jwt', { session: false }), UpdateVerificationStatus);
 router.post('/auth/new-password', passport.authenticate('jwt', { session: false }), ResetPassword);
 router.use(nonauth)
 

@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { GetStats } from '../controllers/dashboard/get-stats'
+import { GetStats } from '../controllers/dashboard/index'
 
 import passport from '../middlewares/passport';
 

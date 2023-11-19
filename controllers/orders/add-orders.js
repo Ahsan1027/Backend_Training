@@ -27,10 +27,10 @@ export const AddOrders = async (req, res) => {
 
     if (!adminUsers || adminUsers.length === 0) {
       return res.status(404).json({ message: 'No admin users found' });
-    }
+    } 
     const adminEmails = adminUsers.map((adminUser) => adminUser.email);
 
-    const updateStockPromises = products?.map(async (data) => {
+    for (const data of products) {
       const productDataId = mongoose.Types.ObjectId(data?.product?._id);
       const productDetails = await Product.findById(productDataId);
 
@@ -41,11 +41,10 @@ export const AddOrders = async (req, res) => {
       if (productDetails.stock < data.quantity) {
         return res.status(400).json({ message: 'Not enough stock for the order' });
       }
+
       productDetails.stock -= data.quantity;
       await productDetails.save();
-    });
-
-    await Promise.all(updateStockPromises);
+    }
 
     const newOrder = new Orders({
       date,
@@ -58,16 +57,15 @@ export const AddOrders = async (req, res) => {
 
     await newOrder.save();
 
-    const notificationPromises = adminEmails.map((adminEmail) => {
+    for (const adminEmail of adminEmails) {
       const notification = new Notification({
         email: adminEmail,
         orderId,
         isRead: false,
       });
-      return notification.save();
-    });
 
-    await Promise.all(notificationPromises);
+      await notification.save();
+    }
 
     let createCharge = null;
     const result = await CreateCharges(email, cardId, customerId, totalAmount, orderId);

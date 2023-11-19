@@ -1,10 +1,12 @@
 import express from 'express';
 
-import { AddProduct } from '../controllers/products/add-products'
-import { DeleteProduct } from '../controllers/products/delete-products'
-import { EditProduct } from '../controllers/products/edit-products'
-import { GetAllProducts } from '../controllers/products/get-products'
-import { ImportBulkProducts } from '../controllers/products/import-bulk-products'
+import {
+  AddProduct,
+  DeleteProduct,
+  EditProduct,
+  GetAllProducts,
+  ImportBulkProducts
+} from '../controllers/products/index'
 
 import passport from '../middlewares/passport';
 

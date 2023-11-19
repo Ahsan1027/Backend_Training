@@ -1,3 +1,5 @@
+// import mongoose from 'mongoose';
+
 import moment from 'moment';
 
 import Agenda from '../config';
@@ -9,6 +11,8 @@ import OrderStats from '../../models/order-stats';
 
 
 Agenda.define('create-order-stats', { concurrency: 1 }, async (job, done) => {
+  // const objectIdToUpdate = '65393c48cf4579e302913220';
+  // const objectId = mongoose.Types.ObjectId(objectIdToUpdate);
   console.log('*********************************************************');
   console.log('*********  Create Order Stats Job Started   ************');
   console.log('*********************************************************');
@@ -51,28 +55,16 @@ Agenda.define('create-order-stats', { concurrency: 1 }, async (job, done) => {
     job.attrs.progress = 100;
     await job.save();
 
-    const stat = new OrderStats({
-      totalOrders: orderStats[0].totalOrders,
-      totalQuantity: orderStats[0].totalQuantity,
-      totalAmount: orderStats[0].totalAmount
-    });
-    // console.log('data is,,, ', stat);
-
-    const previousStats = await OrderStats.findOne({});
-    if (previousStats) {
-      const { _id } = previousStats;
-      await OrderStats.updateOne({
-        _id
-      }, {
+    await OrderStats.updateOne(
+      { _id: '65393c48cf4579e302913220' },
+      {
         $set: {
           totalOrders: orderStats[0].totalOrders,
           totalQuantity: orderStats[0].totalQuantity,
-          totalAmount: orderStats[0].totalAmount
+          totalAmount: orderStats[0].totalAmount,
         }
-      })
-    } else {
-      await stat.save();
-    }
+      },
+      { upsert: true, });
 
     console.log('*********************************************************');
     console.log('********  Create Order Stats Job Completed   ************');

@@ -1,11 +1,13 @@
 import express from 'express';
 
-import { AddOrders } from '../controllers/orders/add-orders'
-import { DeleteOrders } from '../controllers/orders/delete-orders'
-import { GetOrders } from '../controllers/orders/get-orders'
-import { OrdersDelivered } from '../controllers/orders/mark-delivered-orders'
-import { GetStats } from '../controllers/orders/get-orders-stats'
-import { GetOrderDetail } from '../controllers/orders/get-order-details';
+import {
+  AddOrders,
+  DeleteOrders,
+  GetOrders,
+  OrdersDelivered,
+  GetStats,
+  GetOrderDetail
+} from '../controllers/orders/index'
 
 import passport from '../middlewares/passport';
 
