@@ -30,9 +30,12 @@ const UserSchema = new mongoose.Schema({
   stripeId: {
     type: String,
   },
-  isVerified:{
+  isVerified: {
     type: Boolean,
     default: false,
+  },
+  token: {
+    type: String
   }
 })
 

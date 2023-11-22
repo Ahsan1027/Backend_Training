@@ -40,8 +40,6 @@ export const OrdersDelivered = async (req, res) => {
       message: 'Delivery status updated successfully',
     });
   } catch (error) {
-    res.status(500).json({
-      message: 'Error updating delivery status',
-    });
+    res.status(500).json({ message: 'Error updating delivery status' });
   }
 };

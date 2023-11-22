@@ -2,7 +2,6 @@ import express from 'express';
 
 import {
   AddOrders,
-  DeleteOrders,
   GetOrders,
   OrdersDelivered,
   GetStats,
@@ -14,7 +13,6 @@ import passport from '../middlewares/passport';
 const router = express.Router();
 
 router.post('/add-order', passport.authenticate('jwt', { session: false }), AddOrders);
-router.delete('/delete-order/:orderId', DeleteOrders);
 router.get('/get-order', passport.authenticate('jwt', { session: false }), GetOrders);
 router.get('/get-order-detail/:orderId', passport.authenticate('jwt', { session: false }), GetOrderDetail);
 router.post('/add-delivery', passport.authenticate('jwt', { session: false }), OrdersDelivered);

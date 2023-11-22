@@ -2,6 +2,10 @@ import Address from '../../models/address';
 
 export const GetAddress = async (req, res) => {
   try {
+    if (req.user.role !== 'user') {
+      return res.status(403).json({ message: 'Permission denied.' });
+    }
+
     const { id } = req.query;
     const userAddress = await Address.findOne({ id });
 

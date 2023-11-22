@@ -21,9 +21,9 @@ export const GetOrders = async (req, res) => {
     const [orders, total] = await Promise.all([
       Orders
         .find(filters)
-        .sort({ date: -1 }) 
-        .limit(parseInt(limit) || 5)
-        .skip(parseInt(skip) || 0),
+        .sort({ date: -1 })
+        .skip(parseInt(skip) || 0)
+        .limit(parseInt(limit) || 5),
       Orders.countDocuments(filters)
     ]);
 
@@ -38,8 +38,6 @@ export const GetOrders = async (req, res) => {
       total
     });
   } catch (error) {
-    res.status(500).json({
-      message: 'Error Fetching Orders'
-    });
+    res.status(500).json({ message: 'Error Fetching Orders' });
   }
 };

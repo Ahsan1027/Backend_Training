@@ -1,5 +1,3 @@
-// import mongoose from 'mongoose';
-
 import moment from 'moment';
 
 import Agenda from '../config';
@@ -11,8 +9,6 @@ import OrderStats from '../../models/order-stats';
 
 
 Agenda.define('create-order-stats', { concurrency: 1 }, async (job, done) => {
-  // const objectIdToUpdate = '65393c48cf4579e302913220';
-  // const objectId = mongoose.Types.ObjectId(objectIdToUpdate);
   console.log('*********************************************************');
   console.log('*********  Create Order Stats Job Started   ************');
   console.log('*********************************************************');

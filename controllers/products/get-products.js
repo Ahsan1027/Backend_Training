@@ -9,6 +9,8 @@ export const GetAllProducts = async (req, res) => {
       maxPrice,
       sortField,
       sortOrder,
+      size,
+      color,
       title
     } = req.query;
 
@@ -16,19 +18,21 @@ export const GetAllProducts = async (req, res) => {
 
     if (title) filter.title = { $regex: new RegExp(title, 'i') };
 
+    if (color) filter.colors = color;
+
+    if (size) filter.sizes = size;
+
     if (minPrice != 0 && maxPrice != 0) filter.price = { $gte: minPrice, $lte: maxPrice };
 
     const defaultSort = { createdAt: 'desc' };
     const sort = sortField && sortOrder ? { [sortField]: sortOrder } : defaultSort;
 
-    // const sort = sortField && sortOrder ? { [sortField]: sortOrder } : null;
-
     const [products, total] = await Promise.all([
       Product
         .find(filter)
         .sort(sort)
-        .limit(limit || 5)
-        .skip(skip || 0),
+        .skip(skip || 0)
+        .limit(limit || 5),
       Product.countDocuments(filter)
     ]);
 

@@ -18,7 +18,10 @@ export const AddNewCard = async (customerId, CVC, cardNum, expMonth, expYear) =>
       source: `${cardToken.id}`,
     });
 
-    return { cardId: card.id, customerId };
+    return {
+      cardId: card.id,
+      customerId
+    };
   } catch (error) {
     throw new Error(error);
   }

@@ -1,7 +1,5 @@
 import moment from 'moment';
 
-// import mongoose from 'mongoose';
-
 import Agenda from '../config';
 
 import { JOB_STATES } from '../utils';
@@ -11,7 +9,6 @@ import Product from '../../models/products';
 import DashboardStats from '../../models/dashboard-stats';
 
 Agenda.define('create-dashboard-stats', { concurrency: 1 }, async (job, done) => {
-  // const objectIdToUpdate = '6532b5133cca529cf97b425a';
   console.log('*********************************************************');
   console.log('*********  Create Dashboard Stats Job Started   *********');
   console.log('*********************************************************');

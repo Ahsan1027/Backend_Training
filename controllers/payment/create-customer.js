@@ -15,6 +15,7 @@ export const CreateNewCustomer = async (req, res) => {
       expMonth,
       expYear,
     } = req.body;
+    
     const user = await User.findOne({ email });
 
     let cardId = null;

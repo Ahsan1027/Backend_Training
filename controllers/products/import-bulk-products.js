@@ -18,6 +18,10 @@ const chunkSize = 2;
 
 export const ImportBulkProducts = async (req, res) => {
   try {
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Permission denied.' });
+    }
+    
     upload(req, res, async (err) => {
       if (err) {
         return res.status(500).json({ message: 'Error uploading file' });

@@ -12,7 +12,10 @@ export const GetCustomerCards = async (req, res) => {
 
     const cards = await stripeInstance.customers.listSources(
       customerId,
-      { object: 'card', limit: 3 }
+      { 
+        object: 'card', 
+        limit: 3 
+      }
     );
 
     return res.status(200).send({ cards: cards.data });
