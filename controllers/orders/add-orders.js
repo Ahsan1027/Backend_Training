@@ -23,13 +23,6 @@ export const AddOrders = async (req, res) => {
       return res.status(400).json({ message: 'Missing required fields' });
     }
 
-    const adminUsers = await User.find({ role: 'admin' });
-
-    if (!adminUsers || adminUsers.length === 0) {
-      return res.status(404).json({ message: 'No admin users found' });
-    } 
-    const adminEmails = adminUsers.map((adminUser) => adminUser.email);
-
     for (const data of products) {
       const productDataId = mongoose.Types.ObjectId(data?.product?._id);
       const productDetails = await Product.findById(productDataId);
@@ -56,6 +49,13 @@ export const AddOrders = async (req, res) => {
     });
 
     await newOrder.save();
+
+    const adminUsers = await User.find({ role: 'admin' });
+
+    if (!adminUsers || adminUsers.length === 0) {
+      return res.status(404).json({ message: 'No admin users found' });
+    } 
+    const adminEmails = adminUsers.map((adminUser) => adminUser.email);
 
     for (const adminEmail of adminEmails) {
       const notification = new Notification({

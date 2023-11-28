@@ -1,4 +1,5 @@
 import stripe from 'stripe';
+import _ from 'lodash';
 
 const stripeInstance = stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -12,7 +13,7 @@ export const CreateCharges = async (
   try {
     const createCharge = await stripeInstance.charges.create({
       receipt_email: email,
-      amount: totalAmount * 100,
+      amount: _.round(totalAmount, 2) * 100,
       currency: 'usd',
       card: cardId,
       customer: customerId,

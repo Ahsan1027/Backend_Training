@@ -33,6 +33,7 @@ export const GetAllProducts = async (req, res) => {
         .sort(sort)
         .skip(skip || 0)
         .limit(limit || 5),
+        
       Product.countDocuments(filter)
     ]);
 

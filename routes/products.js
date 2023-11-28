@@ -5,7 +5,8 @@ import {
   DeleteProduct,
   EditProduct,
   GetAllProducts,
-  ImportBulkProducts
+  ImportBulkProducts,
+  GetProductDetail
 } from '../controllers/products/index'
 
 import passport from '../middlewares/passport';
@@ -17,5 +18,6 @@ router.delete('/delete-prod/:productId', passport.authenticate('jwt', { session:
 router.put('/edit-prod', passport.authenticate('jwt', { session: false }), EditProduct);
 router.post('/import-bulk', passport.authenticate('jwt', { session: false }), ImportBulkProducts);
 router.get('/get-prod', GetAllProducts);
+router.get('/get-prod-detail', GetProductDetail);
 
 export default router;
