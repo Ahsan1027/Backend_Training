@@ -139,25 +139,16 @@ export const ImportBulkProducts = async (req, res) => {
 //       const csvFilePath = req.files[0].path;
 //       const errorRows = [];
 //       let rowIndex = 1;
-//       let chunkData = [];
+//       let productsData = [];
 
 //       const processChunk = async () => {
 //         try {
-//           if (chunkData.length > 0) {
-//             await Product.insertMany(chunkData);
-//             const chunkToSend = [...chunkData];
-//             chunkData = [];
-
-//             res.json({
-//               message: 'Products added successfully',
-//               errorRows,
-//               productsData: chunkToSend,
-//               rowIndex,
-//             });
+//           if (productsData.length > 0) {
+//             await Product.insertMany(productsData);
+//             productsData = [];
 //           }
 //         } catch (error) {
 //           console.error('Error saving chunk to database:', error);
-//           res.status(500).json({ message: 'Error adding products', error });
 //         }
 //       };
 
@@ -165,6 +156,7 @@ export const ImportBulkProducts = async (req, res) => {
 //         .pipe(csv())
 //         .on('data', async (data) => {
 //           const missingFields = [];
+
 //           if (!data.Title) missingFields.push('Title missing');
 
 //           if (!data.Price) missingFields.push('Price missing');
@@ -184,7 +176,6 @@ export const ImportBulkProducts = async (req, res) => {
 
 //           if (!data.Images) missingFields.push('Images missing');
 
-
 //           if (missingFields.length > 0) {
 //             errorRows.push({ rowIndex, missingFields });
 //           } else {
@@ -200,9 +191,9 @@ export const ImportBulkProducts = async (req, res) => {
 //               images: data.Images.split('/').map(image => image),
 //             };
 
-//             chunkData.push(product);
+//             productsData.push(product);
 
-//             if (chunkData.length >= chunkSize) {
+//             if (productsData.length >= chunkSize) {
 //               await processChunk();
 //             }
 //           }
@@ -210,10 +201,20 @@ export const ImportBulkProducts = async (req, res) => {
 //         })
 //         .on('end', async () => {
 //           await processChunk();
+
+//           const total = rowIndex - 1;
+//           const filename = req.files[0].originalname;
+
+//           res.status(201).json({
+//             message: 'Products added successfully',
+//             errorRows,
+//             filename,
+//             total,
+//             rowIndex,
+//           });
 //         });
 //     });
 //   } catch (error) {
 //     res.status(500).json({ message: 'Error adding products', error });
 //   }
 // };
-
